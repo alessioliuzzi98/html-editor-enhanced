@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:html_editor_enhanced/utils/utils.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 /// Toolbar widget class
 class ToolbarWidget extends StatefulWidget {
@@ -330,7 +330,8 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.htmlToolbarOptions.toolbarType == ToolbarType.nativeGrid) {
-      return PointerInterceptor(
+      return CustomDropdownMenuItem(
+        height: widget.htmlToolbarOptions.dropdownItemHeight,
         child: AbsorbPointer(
           absorbing: !_enabled,
           child: Opacity(
@@ -348,7 +349,8 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
       );
     } else if (widget.htmlToolbarOptions.toolbarType ==
         ToolbarType.nativeScrollable) {
-      return PointerInterceptor(
+      return CustomDropdownMenuItem(
+        height: widget.htmlToolbarOptions.dropdownItemHeight,
         child: AbsorbPointer(
           absorbing: !_enabled,
           child: Opacity(
@@ -376,7 +378,8 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
       );
     } else if (widget.htmlToolbarOptions.toolbarType ==
         ToolbarType.nativeExpandable) {
-      return PointerInterceptor(
+      return CustomDropdownMenuItem(
+        height: widget.htmlToolbarOptions.dropdownItemHeight,
         child: AbsorbPointer(
           absorbing: !_enabled,
           child: Opacity(
@@ -487,43 +490,60 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                               .colorScheme
                               .onSurface
                               .withOpacity(0.12))),
-          child: CustomDropdownButtonHideUnderline(
-            child: CustomDropdownButton<String>(
-              elevation: widget.htmlToolbarOptions.dropdownElevation,
-              icon: widget.htmlToolbarOptions.dropdownIcon,
-              iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
-              iconSize: widget.htmlToolbarOptions.dropdownIconSize,
-              itemHeight: widget.htmlToolbarOptions.dropdownItemHeight,
-              focusColor: widget.htmlToolbarOptions.dropdownFocusColor,
-              dropdownColor: widget.htmlToolbarOptions.dropdownBackgroundColor,
-              menuDirection: widget.htmlToolbarOptions.dropdownMenuDirection ??
-                  (widget.htmlToolbarOptions.toolbarPosition ==
-                          ToolbarPosition.belowEditor
-                      ? DropdownMenuDirection.up
-                      : DropdownMenuDirection.down),
-              menuMaxHeight: widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
-                  MediaQuery.of(context).size.height / 3,
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton2<String>(
+              dropdownStyleData: DropdownStyleData(
+                maxHeight: widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
+                    MediaQuery.of(context).size.height / 3,
+                elevation: widget.htmlToolbarOptions.dropdownElevation,
+                decoration: BoxDecoration(
+                  color: widget.htmlToolbarOptions.dropdownBackgroundColor,
+                ),
+                /*menuDirection: widget.htmlToolbarOptions.dropdownMenuDirection ??
+                    (widget.htmlToolbarOptions.toolbarPosition ==
+                        ToolbarPosition.belowEditor
+                        ? DropdownMenuDirection.down
+                        : DropdownMenuDirection.up),*/
+              ),
+              iconStyleData: IconStyleData(
+                icon: widget.htmlToolbarOptions.dropdownIcon ?? Container(),
+                iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
+                iconSize: widget.htmlToolbarOptions.dropdownIconSize,
+              ),
+              menuItemStyleData: MenuItemStyleData(
+                height: widget.htmlToolbarOptions.dropdownItemHeight,
+                overlayColor: MaterialStateProperty.all(
+                  widget.htmlToolbarOptions.dropdownFocusColor,
+                ),
+              ),
               style: widget.htmlToolbarOptions.textStyle,
               items: [
-                CustomDropdownMenuItem(
-                    value: 'p',
-                    child: PointerInterceptor(child: Text('Normal'))),
-                CustomDropdownMenuItem(
+                DropdownMenuItem(
+                  value: 'p',
+                  child: CustomDropdownMenuItem(
+                    height: widget.htmlToolbarOptions.dropdownItemHeight,
+                    child: Text('Normal'),
+                  ),
+                ),
+                DropdownMenuItem(
                     value: 'blockquote',
-                    child: PointerInterceptor(
+                    child: CustomDropdownMenuItem(
+                      height: widget.htmlToolbarOptions.dropdownItemHeight,
                       child: Container(
                           decoration: BoxDecoration(
-                              border: Border(
-                                  left: BorderSide(
-                                      color: Colors.grey, width: 3.0))),
+                            border: Border(
+                              left: BorderSide(color: Colors.grey, width: 3.0),
+                            ),
+                          ),
                           padding: EdgeInsets.symmetric(horizontal: 10.0),
                           child: Text('Quote',
                               style: TextStyle(
                                   fontFamily: 'times', color: Colors.grey))),
                     )),
-                CustomDropdownMenuItem(
+                DropdownMenuItem(
                     value: 'pre',
-                    child: PointerInterceptor(
+                    child: CustomDropdownMenuItem(
+                      height: widget.htmlToolbarOptions.dropdownItemHeight,
                       child: Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
@@ -533,44 +553,50 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                               style: TextStyle(
                                   fontFamily: 'courier', color: Colors.white))),
                     )),
-                CustomDropdownMenuItem(
+                DropdownMenuItem(
                   value: 'h1',
-                  child: PointerInterceptor(
+                  child: CustomDropdownMenuItem(
+                      height: widget.htmlToolbarOptions.dropdownItemHeight,
                       child: Text('Header 1',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 32))),
                 ),
-                CustomDropdownMenuItem(
+                DropdownMenuItem(
                   value: 'h2',
-                  child: PointerInterceptor(
+                  child: CustomDropdownMenuItem(
+                      height: widget.htmlToolbarOptions.dropdownItemHeight,
                       child: Text('Header 2',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 24))),
                 ),
-                CustomDropdownMenuItem(
+                DropdownMenuItem(
                   value: 'h3',
-                  child: PointerInterceptor(
+                  child: CustomDropdownMenuItem(
+                      height: widget.htmlToolbarOptions.dropdownItemHeight,
                       child: Text('Header 3',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18))),
                 ),
-                CustomDropdownMenuItem(
+                DropdownMenuItem(
                   value: 'h4',
-                  child: PointerInterceptor(
+                  child: CustomDropdownMenuItem(
+                      height: widget.htmlToolbarOptions.dropdownItemHeight,
                       child: Text('Header 4',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16))),
                 ),
-                CustomDropdownMenuItem(
+                DropdownMenuItem(
                   value: 'h5',
-                  child: PointerInterceptor(
+                  child: CustomDropdownMenuItem(
+                      height: widget.htmlToolbarOptions.dropdownItemHeight,
                       child: Text('Header 5',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 13))),
                 ),
-                CustomDropdownMenuItem(
+                DropdownMenuItem(
                   value: 'h6',
-                  child: PointerInterceptor(
+                  child: CustomDropdownMenuItem(
+                      height: widget.htmlToolbarOptions.dropdownItemHeight,
                       child: Text('Header 6',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 11))),
@@ -619,42 +645,52 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                                 .colorScheme
                                 .onSurface
                                 .withOpacity(0.12))),
-            child: CustomDropdownButtonHideUnderline(
-              child: CustomDropdownButton<String>(
-                elevation: widget.htmlToolbarOptions.dropdownElevation,
-                icon: widget.htmlToolbarOptions.dropdownIcon,
-                iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
-                iconSize: widget.htmlToolbarOptions.dropdownIconSize,
-                itemHeight: widget.htmlToolbarOptions.dropdownItemHeight,
-                focusColor: widget.htmlToolbarOptions.dropdownFocusColor,
-                dropdownColor:
-                    widget.htmlToolbarOptions.dropdownBackgroundColor,
-                menuDirection:
-                    widget.htmlToolbarOptions.dropdownMenuDirection ??
-                        (widget.htmlToolbarOptions.toolbarPosition ==
-                                ToolbarPosition.belowEditor
-                            ? DropdownMenuDirection.up
-                            : DropdownMenuDirection.down),
-                menuMaxHeight:
-                    widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
-                        MediaQuery.of(context).size.height / 3,
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton2<String>(
+                dropdownStyleData: DropdownStyleData(
+                  maxHeight: widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
+                      MediaQuery.of(context).size.height / 3,
+                  elevation: widget.htmlToolbarOptions.dropdownElevation,
+                  decoration: BoxDecoration(
+                    color: widget.htmlToolbarOptions.dropdownBackgroundColor,
+                  ),
+                  /*menuDirection: widget.htmlToolbarOptions.dropdownMenuDirection ??
+                    (widget.htmlToolbarOptions.toolbarPosition ==
+                        ToolbarPosition.belowEditor
+                        ? DropdownMenuDirection.down
+                        : DropdownMenuDirection.up),*/
+                ),
+                iconStyleData: IconStyleData(
+                  icon: widget.htmlToolbarOptions.dropdownIcon ?? Container(),
+                  iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
+                  iconSize: widget.htmlToolbarOptions.dropdownIconSize,
+                ),
+                menuItemStyleData: MenuItemStyleData(
+                  height: widget.htmlToolbarOptions.dropdownItemHeight,
+                  overlayColor: MaterialStateProperty.all(
+                    widget.htmlToolbarOptions.dropdownFocusColor,
+                  ),
+                ),
                 style: widget.htmlToolbarOptions.textStyle,
                 items: [
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'Courier New',
-                    child: PointerInterceptor(
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: Text('Courier New',
                             style: TextStyle(fontFamily: 'Courier'))),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'sans-serif',
-                    child: PointerInterceptor(
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: Text('Sans Serif',
                             style: TextStyle(fontFamily: 'sans-serif'))),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'Times New Roman',
-                    child: PointerInterceptor(
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: Text('Times New Roman',
                             style: TextStyle(fontFamily: 'Times'))),
                   ),
@@ -701,66 +737,80 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                                 .colorScheme
                                 .onSurface
                                 .withOpacity(0.12))),
-            child: CustomDropdownButtonHideUnderline(
-              child: CustomDropdownButton<double>(
-                elevation: widget.htmlToolbarOptions.dropdownElevation,
-                icon: widget.htmlToolbarOptions.dropdownIcon,
-                iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
-                iconSize: widget.htmlToolbarOptions.dropdownIconSize,
-                itemHeight: widget.htmlToolbarOptions.dropdownItemHeight,
-                focusColor: widget.htmlToolbarOptions.dropdownFocusColor,
-                dropdownColor:
-                    widget.htmlToolbarOptions.dropdownBackgroundColor,
-                menuDirection:
-                    widget.htmlToolbarOptions.dropdownMenuDirection ??
-                        (widget.htmlToolbarOptions.toolbarPosition ==
-                                ToolbarPosition.belowEditor
-                            ? DropdownMenuDirection.up
-                            : DropdownMenuDirection.down),
-                menuMaxHeight:
-                    widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
-                        MediaQuery.of(context).size.height / 3,
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton2<double>(
+                dropdownStyleData: DropdownStyleData(
+                  maxHeight: widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
+                      MediaQuery.of(context).size.height / 3,
+                  elevation: widget.htmlToolbarOptions.dropdownElevation,
+                  decoration: BoxDecoration(
+                    color: widget.htmlToolbarOptions.dropdownBackgroundColor,
+                  ),
+                  /*menuDirection: widget.htmlToolbarOptions.dropdownMenuDirection ??
+                    (widget.htmlToolbarOptions.toolbarPosition ==
+                        ToolbarPosition.belowEditor
+                        ? DropdownMenuDirection.down
+                        : DropdownMenuDirection.up),*/
+                ),
+                iconStyleData: IconStyleData(
+                  icon: widget.htmlToolbarOptions.dropdownIcon ?? Container(),
+                  iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
+                  iconSize: widget.htmlToolbarOptions.dropdownIconSize,
+                ),
+                menuItemStyleData: MenuItemStyleData(
+                  height: widget.htmlToolbarOptions.dropdownItemHeight,
+                  overlayColor: MaterialStateProperty.all(
+                    widget.htmlToolbarOptions.dropdownFocusColor,
+                  ),
+                ),
                 style: widget.htmlToolbarOptions.textStyle,
                 items: [
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 1,
-                    child: PointerInterceptor(
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: Text(
                             "${_fontSizeUnitSelectedItem == "px" ? "11" : "8"} $_fontSizeUnitSelectedItem")),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 2,
-                    child: PointerInterceptor(
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: Text(
                             "${_fontSizeUnitSelectedItem == "px" ? "13" : "10"} $_fontSizeUnitSelectedItem")),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 3,
-                    child: PointerInterceptor(
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: Text(
                             "${_fontSizeUnitSelectedItem == "px" ? "16" : "12"} $_fontSizeUnitSelectedItem")),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 4,
-                    child: PointerInterceptor(
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: Text(
                             "${_fontSizeUnitSelectedItem == "px" ? "19" : "14"} $_fontSizeUnitSelectedItem")),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 5,
-                    child: PointerInterceptor(
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: Text(
                             "${_fontSizeUnitSelectedItem == "px" ? "24" : "18"} $_fontSizeUnitSelectedItem")),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 6,
-                    child: PointerInterceptor(
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: Text(
                             "${_fontSizeUnitSelectedItem == "px" ? "32" : "24"} $_fontSizeUnitSelectedItem")),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 7,
-                    child: PointerInterceptor(
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: Text(
                             "${_fontSizeUnitSelectedItem == "px" ? "48" : "36"} $_fontSizeUnitSelectedItem")),
                   ),
@@ -831,34 +881,45 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                                 .colorScheme
                                 .onSurface
                                 .withOpacity(0.12))),
-            child: CustomDropdownButtonHideUnderline(
-              child: CustomDropdownButton<String>(
-                elevation: widget.htmlToolbarOptions.dropdownElevation,
-                icon: widget.htmlToolbarOptions.dropdownIcon,
-                iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
-                iconSize: widget.htmlToolbarOptions.dropdownIconSize,
-                itemHeight: widget.htmlToolbarOptions.dropdownItemHeight,
-                focusColor: widget.htmlToolbarOptions.dropdownFocusColor,
-                dropdownColor:
-                    widget.htmlToolbarOptions.dropdownBackgroundColor,
-                menuDirection:
-                    widget.htmlToolbarOptions.dropdownMenuDirection ??
-                        (widget.htmlToolbarOptions.toolbarPosition ==
-                                ToolbarPosition.belowEditor
-                            ? DropdownMenuDirection.up
-                            : DropdownMenuDirection.down),
-                menuMaxHeight:
-                    widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
-                        MediaQuery.of(context).size.height / 3,
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton2<String>(
+                dropdownStyleData: DropdownStyleData(
+                  maxHeight: widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
+                      MediaQuery.of(context).size.height / 3,
+                  elevation: widget.htmlToolbarOptions.dropdownElevation,
+                  decoration: BoxDecoration(
+                    color: widget.htmlToolbarOptions.dropdownBackgroundColor,
+                  ),
+                  /*menuDirection: widget.htmlToolbarOptions.dropdownMenuDirection ??
+                    (widget.htmlToolbarOptions.toolbarPosition ==
+                        ToolbarPosition.belowEditor
+                        ? DropdownMenuDirection.down
+                        : DropdownMenuDirection.up),*/
+                ),
+                iconStyleData: IconStyleData(
+                  icon: widget.htmlToolbarOptions.dropdownIcon ?? Container(),
+                  iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
+                  iconSize: widget.htmlToolbarOptions.dropdownIconSize,
+                ),
+                menuItemStyleData: MenuItemStyleData(
+                  height: widget.htmlToolbarOptions.dropdownItemHeight,
+                  overlayColor: MaterialStateProperty.all(
+                    widget.htmlToolbarOptions.dropdownFocusColor,
+                  ),
+                ),
                 style: widget.htmlToolbarOptions.textStyle,
                 items: [
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'pt',
-                    child: PointerInterceptor(child: Text('pt')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('pt')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'px',
-                    child: PointerInterceptor(child: Text('px')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('px')),
                   ),
                 ],
                 value: _fontSizeUnitSelectedItem,
@@ -1111,7 +1172,8 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                 await showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return PointerInterceptor(
+                      return CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: AlertDialog(
                           scrollable: true,
                           content: ColorPicker(
@@ -1285,58 +1347,81 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                                 .colorScheme
                                 .onSurface
                                 .withOpacity(0.12))),
-            child: CustomDropdownButtonHideUnderline(
-              child: CustomDropdownButton<String>(
-                elevation: widget.htmlToolbarOptions.dropdownElevation,
-                icon: widget.htmlToolbarOptions.dropdownIcon,
-                iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
-                iconSize: widget.htmlToolbarOptions.dropdownIconSize,
-                itemHeight: widget.htmlToolbarOptions.dropdownItemHeight,
-                focusColor: widget.htmlToolbarOptions.dropdownFocusColor,
-                dropdownColor:
-                    widget.htmlToolbarOptions.dropdownBackgroundColor,
-                menuDirection:
-                    widget.htmlToolbarOptions.dropdownMenuDirection ??
-                        (widget.htmlToolbarOptions.toolbarPosition ==
-                                ToolbarPosition.belowEditor
-                            ? DropdownMenuDirection.up
-                            : DropdownMenuDirection.down),
-                menuMaxHeight:
-                    widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
-                        MediaQuery.of(context).size.height / 3,
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton2<String>(
+                dropdownStyleData: DropdownStyleData(
+                  maxHeight: widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
+                      MediaQuery.of(context).size.height / 3,
+                  elevation: widget.htmlToolbarOptions.dropdownElevation,
+                  decoration: BoxDecoration(
+                    color: widget.htmlToolbarOptions.dropdownBackgroundColor,
+                  ),
+                  /*menuDirection: widget.htmlToolbarOptions.dropdownMenuDirection ??
+                    (widget.htmlToolbarOptions.toolbarPosition ==
+                        ToolbarPosition.belowEditor
+                        ? DropdownMenuDirection.down
+                        : DropdownMenuDirection.up),*/
+                ),
+                iconStyleData: IconStyleData(
+                  icon: widget.htmlToolbarOptions.dropdownIcon ?? Container(),
+                  iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
+                  iconSize: widget.htmlToolbarOptions.dropdownIconSize,
+                ),
+                menuItemStyleData: MenuItemStyleData(
+                  height: widget.htmlToolbarOptions.dropdownItemHeight,
+                  overlayColor: MaterialStateProperty.all(
+                    widget.htmlToolbarOptions.dropdownFocusColor,
+                  ),
+                ),
                 style: widget.htmlToolbarOptions.textStyle,
                 items: [
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'decimal',
-                    child: PointerInterceptor(child: Text('1. Numbered')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('1. Numbered')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'lower-alpha',
-                    child: PointerInterceptor(child: Text('a. Lower Alpha')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('a. Lower Alpha')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'upper-alpha',
-                    child: PointerInterceptor(child: Text('A. Upper Alpha')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('A. Upper Alpha')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'lower-roman',
-                    child: PointerInterceptor(child: Text('i. Lower Roman')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('i. Lower Roman')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'upper-roman',
-                    child: PointerInterceptor(child: Text('I. Upper Roman')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('I. Upper Roman')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'disc',
-                    child: PointerInterceptor(child: Text('• Disc')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('• Disc')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'circle',
-                    child: PointerInterceptor(child: Text('○ Circle')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('○ Circle')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'square',
-                    child: PointerInterceptor(child: Text('■ Square')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('■ Square')),
                   ),
                 ],
                 hint: Text('Select list style'),
@@ -1507,55 +1592,80 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                                 .colorScheme
                                 .onSurface
                                 .withOpacity(0.12))),
-            child: CustomDropdownButtonHideUnderline(
-              child: CustomDropdownButton<double>(
-                elevation: widget.htmlToolbarOptions.dropdownElevation,
-                icon: widget.htmlToolbarOptions.dropdownIcon,
-                iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
-                iconSize: widget.htmlToolbarOptions.dropdownIconSize,
-                itemHeight: widget.htmlToolbarOptions.dropdownItemHeight,
-                focusColor: widget.htmlToolbarOptions.dropdownFocusColor,
-                dropdownColor:
-                    widget.htmlToolbarOptions.dropdownBackgroundColor,
-                menuDirection:
-                    widget.htmlToolbarOptions.dropdownMenuDirection ??
-                        (widget.htmlToolbarOptions.toolbarPosition ==
-                                ToolbarPosition.belowEditor
-                            ? DropdownMenuDirection.up
-                            : DropdownMenuDirection.down),
-                menuMaxHeight:
-                    widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
-                        MediaQuery.of(context).size.height / 3,
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton2<double>(
+                dropdownStyleData: DropdownStyleData(
+                  maxHeight: widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
+                      MediaQuery.of(context).size.height / 3,
+                  elevation: widget.htmlToolbarOptions.dropdownElevation,
+                  decoration: BoxDecoration(
+                    color: widget.htmlToolbarOptions.dropdownBackgroundColor,
+                  ),
+                  /*menuDirection: widget.htmlToolbarOptions.dropdownMenuDirection ??
+                    (widget.htmlToolbarOptions.toolbarPosition ==
+                        ToolbarPosition.belowEditor
+                        ? DropdownMenuDirection.down
+                        : DropdownMenuDirection.up),*/
+                ),
+                iconStyleData: IconStyleData(
+                  icon: widget.htmlToolbarOptions.dropdownIcon ?? Container(),
+                  iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
+                  iconSize: widget.htmlToolbarOptions.dropdownIconSize,
+                ),
+                menuItemStyleData: MenuItemStyleData(
+                  height: widget.htmlToolbarOptions.dropdownItemHeight,
+                  overlayColor: MaterialStateProperty.all(
+                    widget.htmlToolbarOptions.dropdownFocusColor,
+                  ),
+                ),
                 style: widget.htmlToolbarOptions.textStyle,
                 items: [
-                  CustomDropdownMenuItem(
-                      value: 1, child: PointerInterceptor(child: Text('1.0'))),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
+                      value: 1,
+                      child: CustomDropdownMenuItem(
+                          height: widget.htmlToolbarOptions.dropdownItemHeight,
+                          child: Text('1.0'))),
+                  DropdownMenuItem(
                     value: 1.2,
-                    child: PointerInterceptor(child: Text('1.2')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('1.2')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 1.4,
-                    child: PointerInterceptor(child: Text('1.4')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('1.4')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 1.5,
-                    child: PointerInterceptor(child: Text('1.5')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('1.5')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 1.6,
-                    child: PointerInterceptor(child: Text('1.6')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('1.6')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 1.8,
-                    child: PointerInterceptor(child: Text('1.8')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('1.8')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 2,
-                    child: PointerInterceptor(child: Text('2.0')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('2.0')),
                   ),
-                  CustomDropdownMenuItem(
-                      value: 3, child: PointerInterceptor(child: Text('3.0'))),
+                  DropdownMenuItem(
+                      value: 3,
+                      child: CustomDropdownMenuItem(
+                          height: widget.htmlToolbarOptions.dropdownItemHeight,
+                          child: Text('3.0'))),
                 ],
                 value: _lineHeightSelectedItem,
                 onChanged: (double? changed) async {
@@ -1663,42 +1773,57 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                                 .colorScheme
                                 .onSurface
                                 .withOpacity(0.12))),
-            child: CustomDropdownButtonHideUnderline(
-              child: CustomDropdownButton<String>(
-                elevation: widget.htmlToolbarOptions.dropdownElevation,
-                icon: widget.htmlToolbarOptions.dropdownIcon,
-                iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
-                iconSize: widget.htmlToolbarOptions.dropdownIconSize,
-                itemHeight: widget.htmlToolbarOptions.dropdownItemHeight,
-                focusColor: widget.htmlToolbarOptions.dropdownFocusColor,
-                dropdownColor:
-                    widget.htmlToolbarOptions.dropdownBackgroundColor,
-                menuDirection:
-                    widget.htmlToolbarOptions.dropdownMenuDirection ??
-                        (widget.htmlToolbarOptions.toolbarPosition ==
-                                ToolbarPosition.belowEditor
-                            ? DropdownMenuDirection.up
-                            : DropdownMenuDirection.down),
-                menuMaxHeight:
-                    widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
-                        MediaQuery.of(context).size.height / 3,
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton2<String>(
+                dropdownStyleData: DropdownStyleData(
+                  maxHeight: widget.htmlToolbarOptions.dropdownMenuMaxHeight ??
+                      MediaQuery.of(context).size.height / 3,
+                  elevation: widget.htmlToolbarOptions.dropdownElevation,
+                  decoration: BoxDecoration(
+                    color: widget.htmlToolbarOptions.dropdownBackgroundColor,
+                  ),
+                  /*menuDirection: widget.htmlToolbarOptions.dropdownMenuDirection ??
+                    (widget.htmlToolbarOptions.toolbarPosition ==
+                        ToolbarPosition.belowEditor
+                        ? DropdownMenuDirection.down
+                        : DropdownMenuDirection.up),*/
+                ),
+                iconStyleData: IconStyleData(
+                  icon: widget.htmlToolbarOptions.dropdownIcon ?? Container(),
+                  iconEnabledColor: widget.htmlToolbarOptions.dropdownIconColor,
+                  iconSize: widget.htmlToolbarOptions.dropdownIconSize,
+                ),
+                menuItemStyleData: MenuItemStyleData(
+                  height: widget.htmlToolbarOptions.dropdownItemHeight,
+                  overlayColor: MaterialStateProperty.all(
+                    widget.htmlToolbarOptions.dropdownFocusColor,
+                  ),
+                ),
                 style: widget.htmlToolbarOptions.textStyle,
                 items: [
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'lower',
-                    child: PointerInterceptor(child: Text('lowercase')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('lowercase')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'sentence',
-                    child: PointerInterceptor(child: Text('Sentence case')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('Sentence case')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'title',
-                    child: PointerInterceptor(child: Text('Title Case')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('Title Case')),
                   ),
-                  CustomDropdownMenuItem(
+                  DropdownMenuItem(
                     value: 'upper',
-                    child: PointerInterceptor(child: Text('UPPERCASE')),
+                    child: CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
+                        child: Text('UPPERCASE')),
                   ),
                 ],
                 hint: Text('Change case'),
@@ -1793,7 +1918,8 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                 await showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return PointerInterceptor(
+                      return CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: StatefulBuilder(builder:
                             (BuildContext context, StateSetter setState) {
                           return AlertDialog(
@@ -1933,7 +2059,8 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                 await showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return PointerInterceptor(
+                      return CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: StatefulBuilder(builder:
                             (BuildContext context, StateSetter setState) {
                           return AlertDialog(
@@ -2100,7 +2227,8 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                 await showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return PointerInterceptor(
+                      return CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: StatefulBuilder(builder:
                             (BuildContext context, StateSetter setState) {
                           return AlertDialog(
@@ -2252,7 +2380,8 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                 await showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return PointerInterceptor(
+                      return CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: StatefulBuilder(builder:
                             (BuildContext context, StateSetter setState) {
                           return AlertDialog(
@@ -2404,7 +2533,8 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                 await showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return PointerInterceptor(
+                      return CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: StatefulBuilder(builder:
                             (BuildContext context, StateSetter setState) {
                           return AlertDialog(
@@ -2536,7 +2666,8 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                 await showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return PointerInterceptor(
+                      return CustomDropdownMenuItem(
+                        height: widget.htmlToolbarOptions.dropdownItemHeight,
                         child: StatefulBuilder(builder:
                             (BuildContext context, StateSetter setState) {
                           return AlertDialog(
@@ -2677,7 +2808,8 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                   await showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return PointerInterceptor(
+                        return CustomDropdownMenuItem(
+                          height: widget.htmlToolbarOptions.dropdownItemHeight,
                           child: StatefulBuilder(builder:
                               (BuildContext context, StateSetter setState) {
                             return AlertDialog(

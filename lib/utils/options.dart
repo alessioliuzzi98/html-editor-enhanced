@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:html_editor_enhanced/html_editor.dart';
@@ -167,7 +168,6 @@ class HtmlToolbarOptions {
     this.dropdownItemHeight = kMinInteractiveDimension,
     this.dropdownFocusColor,
     this.dropdownBackgroundColor,
-    this.dropdownMenuDirection,
     this.dropdownMenuMaxHeight,
     this.dropdownBoxDecoration,
     this.buttonColor,
@@ -386,7 +386,6 @@ class HtmlToolbarOptions {
   /// Set the menu opening direction for the dropdown. Only useful when using
   /// [ToolbarPosition.custom] since the toolbar otherwise automatically
   /// determines the correct direction.
-  final DropdownMenuDirection? dropdownMenuDirection;
   final double? dropdownMenuMaxHeight;
   final BoxDecoration? dropdownBoxDecoration;
 
