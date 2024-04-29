@@ -681,18 +681,11 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                             style: TextStyle(fontFamily: 'Courier'))),
                   ),
                   DropdownMenuItem(
-                    value: 'sans-serif',
+                    value: 'Billabong',
                     child: CustomDropdownMenuItem(
                         height: widget.htmlToolbarOptions.dropdownItemHeight,
-                        child: Text('Sans Serif',
-                            style: TextStyle(fontFamily: 'sans-serif'))),
-                  ),
-                  DropdownMenuItem(
-                    value: 'Times New Roman',
-                    child: CustomDropdownMenuItem(
-                        height: widget.htmlToolbarOptions.dropdownItemHeight,
-                        child: Text('Times New Roman',
-                            style: TextStyle(fontFamily: 'Times'))),
+                        child: Text('Billabong',
+                            style: TextStyle(fontFamily: 'Billabong'))),
                   ),
                 ],
                 value: _fontNameSelectedItem,
