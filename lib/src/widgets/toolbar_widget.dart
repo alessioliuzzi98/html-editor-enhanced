@@ -674,11 +674,11 @@ class ToolbarWidgetState extends State<ToolbarWidget> {
                 style: widget.htmlToolbarOptions.textStyle,
                 items: [
                   DropdownMenuItem(
-                    value: 'Courier New',
+                    value: 'sans-serif',
                     child: CustomDropdownMenuItem(
                         height: widget.htmlToolbarOptions.dropdownItemHeight,
-                        child: Text('Courier New',
-                            style: TextStyle(fontFamily: 'Courier'))),
+                        child: Text('Sans-Serif',
+                            style: TextStyle(fontFamily: 'sans-serif'))),
                   ),
                   DropdownMenuItem(
                     value: 'Billabong',
